@@ -1,0 +1,12 @@
+.sprite {
+  width: 20%;
+  height: auto;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.parent {
+  position: relative;
+}

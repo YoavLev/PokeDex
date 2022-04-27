@@ -1,0 +1,10 @@
+div.InputContainer {
+    position: absolute;
+    top: 65%;
+    left: 40%;
+}
+
+div.TextInput {
+    margin-top: 5px;
+
+}

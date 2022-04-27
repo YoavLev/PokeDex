@@ -1,0 +1,15 @@
+.scrollable-div {
+  color: #002d69;
+  height: 50px;
+  width: 250px;
+  overflow: auto;
+  text-align: justify;
+
+}
+.flavor {
+  margin: auto;
+  position: absolute;
+  top: 48%;
+  left: 40%;
+  padding: 10px;
+}
