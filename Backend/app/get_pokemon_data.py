@@ -40,7 +40,7 @@ class PokemonData:
         try:
             async with session.get(url) as resp:
                 species = await resp.json()
-                flavors_list = species.get('flavor_text_entries', None)
+                flavors_list = species.get('flavor_text_entries', None)  # Get the list of all flavors
                 return flavors_list[0].get('flavor_text', None)  # May not be english...
 
         except Exception as err:
@@ -60,5 +60,6 @@ class PokemonData:
             new_pokemon.sprite = await new_pokemon._get_pokemon_sprite(session)
             new_pokemon.flavor = await new_pokemon._get_pokemon_flavor(session)
         if not new_pokemon.flavor or not new_pokemon.sprite:
+            # Basic error handling - Raise error if data is missing
             raise Exception
         return new_pokemon.__dict__  # Return client-ready data
