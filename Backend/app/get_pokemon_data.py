@@ -5,7 +5,8 @@ from .static import pokemon_api_URLS
 class PokemonData:
     """
     This class populate the Pokemon Object with the following data:
-    { id, flavor, sprite image, and the static pokedex image }
+    { id, flavor, sprite image }
+    Static URLs are imported from static.py.
     """
 
     def __init__(self, pokemon_id):
@@ -48,15 +49,16 @@ class PokemonData:
     @staticmethod
     async def fetch_pokemon_by_id(poke_id):
         """
-        Create new PokemonData object
+        Static method that creates new PokemonData object
         Populate sprite and flavor async
-
-        :return: the object, and Exception if something is missing
+        and returns the object.
+        :return: Exception if something is missing
         """
         new_pokemon = PokemonData(poke_id)
         async with aiohttp.ClientSession() as session:  # interface that can be used for a number of individual requests
+            # Pass this session to each request to avoid creating new sessions
             new_pokemon.sprite = await new_pokemon._get_pokemon_sprite(session)
             new_pokemon.flavor = await new_pokemon._get_pokemon_flavor(session)
         if not new_pokemon.flavor or not new_pokemon.sprite:
             raise Exception
-        return new_pokemon.__dict__
+        return new_pokemon.__dict__  # Return client-ready data
