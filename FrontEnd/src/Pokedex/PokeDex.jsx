@@ -8,7 +8,7 @@ export default function PokeDex({ pokemonData, SetID }) {
   return (
     <div>
       {/* Display the static image */}
-      <img src={pokemonData.pokedex_img} className="responsive center" alt="pokedex"></img>   
+      <img src="/pokedex.png" alt="pokedex" className="responsive center" />
       <Sprite spriteUrl={pokemonData.sprite}/>
       <Flavor flavor={pokemonData.flavor}/>
       <IDInput SetID={SetID} currentID={pokemonData.id} />

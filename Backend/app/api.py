@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Path
 from fastapi.middleware.cors import CORSMiddleware
-from app import get_pokemon_data
+from app.get_pokemon_data import PokemonData
+
 
 app = FastAPI()
 
@@ -26,11 +27,8 @@ async def root(poke_id: int = Path("The ID of the pokemon to get", gt=0, le=898)
     :return:
     """
     try:
-        new_pokemon = get_pokemon_data.PokemonData(poke_id)
-        await new_pokemon.fetch_poke_by_id()
-        response = new_pokemon.__dict__  # Could dump to JSON
+        return await PokemonData.fetch_pokemon_by_id(poke_id)  # returns PokemonData object as Dict, Could dump to JSON
     except Exception as e:
         # If something is missing, return 404 error.
         print("Error on fetching API: ", e)
         raise HTTPException(status_code=404, detail='Not found')
-    return response

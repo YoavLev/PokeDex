@@ -1,19 +1,17 @@
 import aiohttp
+from .static import pokemon_api_URLS
 
 
-class PokemonData():
+class PokemonData:
     """
     This class populate the Pokemon Object with the following data:
     { id, flavor, sprite image, and the static pokedex image }
     """
 
     def __init__(self, pokemon_id):
-        self.pokemon_api_path = "https://pokeapi.co/api/v2/"
         self.id = pokemon_id
         self.flavor = ''
         self.sprite = ''
-        self.pokedex_img = 'https://www.pngitem.com/pimgs/m/541-5418323_gameboy-drawing-electronics-inside-of-a-pokedex' \
-                           '-hd.png '
 
     async def _get_pokemon_sprite(self, session):
         """
@@ -21,11 +19,13 @@ class PokemonData():
         :param session: aiohttp.ClientSession
         :return:
         """
-        url = f'https://pokeapi.co/api/v2/pokemon/{self.id}'
+        url = f"{pokemon_api_URLS.get('pokemon_url')}/{self.id}"
         try:
             async with session.get(url) as resp:
                 pokemon = await resp.json()
-                return pokemon['sprites']['front_default']
+                sprite_list = pokemon.get('sprites', None)  # Get the list of all sprite
+                return sprite_list.get('front_default',
+                                       None) if sprite_list else None  # get spcific sprite if sprite_list exist, else none
         except Exception as err:
             print("Could not get sprite ", err)
 
@@ -33,25 +33,30 @@ class PokemonData():
         """
         Get the pokemon flavor
         :param session: aiohttp.ClientSession
-        :return:
+        :return: Flavor text
         """
-        url = f'https://pokeapi.co/api/v2/pokemon-species/{self.id}'
+        url = f"{pokemon_api_URLS.get('species_url')}/{self.id}"
         try:
             async with session.get(url) as resp:
                 species = await resp.json()
-                return species['flavor_text_entries'][0]['flavor_text']  # May not be english...
+                flavors_list = species.get('flavor_text_entries', None)
+                return flavors_list[0].get('flavor_text', None)  # May not be english...
+
         except Exception as err:
             print("Could not get flavor ", err)
 
-    async def fetch_poke_by_id(self):
+    @staticmethod
+    async def fetch_pokemon_by_id(poke_id):
         """
-        Execute both requests async,
+        Create new PokemonData object
+        Populate sprite and flavor async
 
-        :return: Exception if something is missing
+        :return: the object, and Exception if something is missing
         """
+        new_pokemon = PokemonData(poke_id)
         async with aiohttp.ClientSession() as session:  # Object that can be used for a number of individual requests
-            self.sprite = await self._get_pokemon_sprite(session)
-            self.flavor = await self._get_pokemon_flavor(session)
-            if not self.flavor or not self.sprite:
-                raise Exception
-
+            new_pokemon.sprite = await new_pokemon._get_pokemon_sprite(session)
+            new_pokemon.flavor = await new_pokemon._get_pokemon_flavor(session)
+        if not new_pokemon.flavor or not new_pokemon.sprite:
+            raise Exception
+        return new_pokemon.__dict__
