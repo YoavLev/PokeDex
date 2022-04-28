@@ -40,7 +40,8 @@ class PokemonData:
             flavor_languages_dict = flavor_text.get('language')
             if flavor_languages_dict.get('name') == 'en':
                 self.flavor = flavor_text.get('flavor_text')
-        return None
+                return
+        self.flavor = None
 
     def _parse_sprite_from_response(self, res: dict):
         """
