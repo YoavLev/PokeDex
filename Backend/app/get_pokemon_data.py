@@ -54,7 +54,7 @@ class PokemonData:
         :return: the object, and Exception if something is missing
         """
         new_pokemon = PokemonData(poke_id)
-        async with aiohttp.ClientSession() as session:  # Object that can be used for a number of individual requests
+        async with aiohttp.ClientSession() as session:  # interface that can be used for a number of individual requests
             new_pokemon.sprite = await new_pokemon._get_pokemon_sprite(session)
             new_pokemon.flavor = await new_pokemon._get_pokemon_flavor(session)
         if not new_pokemon.flavor or not new_pokemon.sprite:
