@@ -1,12 +1,12 @@
 import aiohttp
-from .static import pokemon_api_URLS
+from .consts import pokemon_api_URLS
 
 
 class PokemonData:
     """
     This class populate the Pokemon Object with the following data:
     { id, flavor, sprite image }
-    Static URLs are imported from static.py.
+    Static URLs are imported from consts.py.
     """
 
     def __init__(self, pokemon_id):
@@ -24,9 +24,8 @@ class PokemonData:
         try:
             async with session.get(url) as resp:
                 pokemon = await resp.json()
-                sprite_list = pokemon.get('sprites', None)  # Get the list of all sprite
-                return sprite_list.get('front_default',
-                                       None) if sprite_list else None  # get spcific sprite if sprite_list exist, else none
+                sprite_list = pokemon.get('sprites')  # Get the list of all sprite
+                return sprite_list.get('front_default') if sprite_list else None  # get spcific sprite if sprite_list exist, else none
         except Exception as err:
             print("Could not get sprite ", err)
 
@@ -40,8 +39,8 @@ class PokemonData:
         try:
             async with session.get(url) as resp:
                 species = await resp.json()
-                flavors_list = species.get('flavor_text_entries', None)  # Get the list of all flavors
-                return flavors_list[0].get('flavor_text', None)  # May not be english...
+                flavors_list = species.get('flavor_text_entries')  # Get the list of all flavors
+                return flavors_list[0].get('flavor_text')  # May not be english...
 
         except Exception as err:
             print("Could not get flavor ", err)
